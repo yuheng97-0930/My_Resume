@@ -32,7 +32,7 @@ npm run dev
 代码注释使用 English。
 
 Business Card 与 Moodboard 已放在 `public/assets/brand/`。Business Card
-可以点击或使用键盘 Enter 翻面，Moodboard 可以在两页之间切换。
+支持鼠标或触控 360° 旋转、点击快速翻面与键盘控制；Moodboard 可以在两页之间切换。
 
 ## 部署到现有 My_Resume 仓库
 

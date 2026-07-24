@@ -1,6 +1,8 @@
 import {
   FormEvent,
+  KeyboardEvent as ReactKeyboardEvent,
   MouseEvent as ReactMouseEvent,
+  PointerEvent as ReactPointerEvent,
   useEffect,
   useRef,
   useState,
@@ -221,6 +223,15 @@ const certificates: Certificate[] = [
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
+  const cardDragRef = useRef({
+    active: false,
+    moved: false,
+    pointerId: -1,
+    startX: 0,
+    startY: 0,
+    originX: 0,
+    originY: 0,
+  });
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
@@ -228,7 +239,8 @@ export default function Home() {
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [selectedCertificate, setSelectedCertificate] =
     useState<Certificate | null>(null);
-  const [businessCardFlipped, setBusinessCardFlipped] = useState(false);
+  const [cardRotation, setCardRotation] = useState({ x: 0, y: 0 });
+  const [cardDragging, setCardDragging] = useState(false);
   const [moodboardPage, setMoodboardPage] = useState(0);
   const [formStatus, setFormStatus] = useState("");
 
@@ -465,6 +477,73 @@ export default function Home() {
     event.currentTarget.style.setProperty("--rotate-y", "0deg");
   };
 
+  const handleCardPointerDown = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    cardDragRef.current = {
+      active: true,
+      moved: false,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: cardRotation.x,
+      originY: cardRotation.y,
+    };
+    setCardDragging(true);
+  };
+
+  const handleCardPointerMove = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const drag = cardDragRef.current;
+    if (!drag.active || drag.pointerId !== event.pointerId) return;
+    const deltaX = event.clientX - drag.startX;
+    const deltaY = event.clientY - drag.startY;
+    if (Math.hypot(deltaX, deltaY) > 4) drag.moved = true;
+    setCardRotation({
+      x: drag.originX - deltaY * 0.38,
+      y: drag.originY + deltaX * 0.48,
+    });
+  };
+
+  const finishCardDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const drag = cardDragRef.current;
+    if (drag.pointerId !== event.pointerId) return;
+    drag.active = false;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    setCardDragging(false);
+  };
+
+  const handleCardClick = () => {
+    if (cardDragRef.current.moved) {
+      cardDragRef.current.moved = false;
+      return;
+    }
+    setCardRotation((rotation) => ({ ...rotation, y: rotation.y + 180 }));
+  };
+
+  const handleCardKeyDown = (event: ReactKeyboardEvent<HTMLButtonElement>) => {
+    const step = event.shiftKey ? 30 : 12;
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      event.preventDefault();
+      setCardRotation((rotation) => ({
+        ...rotation,
+        y: rotation.y + (event.key === "ArrowLeft" ? -step : step),
+      }));
+    }
+    if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+      event.preventDefault();
+      setCardRotation((rotation) => ({
+        ...rotation,
+        x: rotation.x + (event.key === "ArrowUp" ? step : -step),
+      }));
+    }
+    if (event.key === "Home") {
+      event.preventDefault();
+      setCardRotation({ x: 0, y: 0 });
+    }
+  };
+
   const handleContact = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
@@ -496,6 +575,11 @@ export default function Home() {
       (index) => (index + direction + projectImages.length) % projectImages.length,
     );
   };
+
+  const businessCardBackVisible =
+    Math.cos((cardRotation.x * Math.PI) / 180) *
+      Math.cos((cardRotation.y * Math.PI) / 180) <
+    0;
 
   return (
     <>
@@ -786,16 +870,27 @@ export default function Home() {
                   <h3>Business Card</h3>
                 </div>
                 <span className="interactive-badge">
-                  <i aria-hidden="true">↻</i> Interactive · click to flip
+                  <i aria-hidden="true">⟳</i> 360° interactive inspection
                 </span>
               </div>
 
               <button
-                className={`business-card-button ${businessCardFlipped ? "is-flipped" : ""}`}
+                className={`business-card-button ${cardDragging ? "is-dragging" : ""}`}
                 type="button"
-                aria-pressed={businessCardFlipped}
-                aria-label={`Show ${businessCardFlipped ? "front" : "back"} of business card`}
-                onClick={() => setBusinessCardFlipped((flipped) => !flipped)}
+                aria-pressed={businessCardBackVisible}
+                aria-label="Inspect the business card. Drag to rotate, click to flip, or use the arrow keys."
+                style={
+                  {
+                    "--card-rotate-x": `${cardRotation.x}deg`,
+                    "--card-rotate-y": `${cardRotation.y}deg`,
+                  } as React.CSSProperties
+                }
+                onClick={handleCardClick}
+                onKeyDown={handleCardKeyDown}
+                onPointerDown={handleCardPointerDown}
+                onPointerMove={handleCardPointerMove}
+                onPointerUp={finishCardDrag}
+                onPointerCancel={finishCardDrag}
               >
                 <span className="business-card-inner">
                   <span className="business-card-face business-card-front">
@@ -814,21 +909,37 @@ export default function Home() {
                   </span>
                 </span>
                 <span className="flip-cue" aria-hidden="true">
-                  <i>↻</i>
-                  <span>Flip card</span>
+                  <i>↔</i>
+                  <span>Drag to rotate · click to flip</span>
                 </span>
               </button>
 
+              <div className="inspection-toolbar">
+                <div className="inspection-status" aria-live="polite">
+                  <span className="inspection-status-dot" />
+                  Viewing {businessCardBackVisible ? "Page 2 · Back" : "Page 1 · Front"}
+                </div>
+                <div className="inspection-actions">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setCardRotation((rotation) => ({
+                        ...rotation,
+                        y: rotation.y + 180,
+                      }))
+                    }
+                  >
+                    Rotate 180°
+                  </button>
+                  <button type="button" onClick={() => setCardRotation({ x: 0, y: 0 })}>
+                    Reset view
+                  </button>
+                </div>
+              </div>
+
               <div className="brand-showcase-footer">
-                <p aria-live="polite">
-                  Showing {businessCardFlipped ? "back" : "front"} · Click the card
-                  or press Enter to flip.
-                </p>
-                <a
-                  href={publicAsset("assets/brand/business-card.pdf")}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <p>Mouse/touch drag: free rotation · Arrow keys: precise rotation · Home: reset.</p>
+                <a href={publicAsset("assets/brand/business-card.pdf")} target="_blank" rel="noreferrer">
                   Open Business Card PDF ↗
                 </a>
               </div>

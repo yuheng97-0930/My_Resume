@@ -51,8 +51,9 @@ case-sensitive.
 - `public/assets/brand/moodboard-mind-map.png`
 - `public/assets/brand/moodboard.pdf`
 
-The business card preview uses the two PNG files for its interactive
-front-and-back flip. The PDF links open the original two-page documents.
+The business card preview uses Page 1 for the front and Page 2 for the back.
+It supports 360-degree mouse/touch inspection, click-to-flip and keyboard
+rotation. The PDF links open the original two-page documents.
 
 ## Resume
 

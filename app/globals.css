@@ -1410,7 +1410,13 @@ main,
   background: transparent;
   color: var(--color-text);
   perspective: 1500px;
-  cursor: pointer;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.business-card-button.is-dragging {
+  cursor: grabbing;
 }
 
 .business-card-inner {
@@ -1418,22 +1424,14 @@ main,
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
+  transform: rotateX(var(--card-rotate-x, 0deg)) rotateY(var(--card-rotate-y, 0deg));
   transform-style: preserve-3d;
-  transition: transform 850ms var(--ease), filter 350ms ease;
-  filter: drop-shadow(0 26px 28px rgba(0, 0, 0, 0.24));
+  transition: transform 720ms var(--ease);
+  will-change: transform;
 }
 
-.business-card-button:hover .business-card-inner {
-  transform: translateY(-5px) rotateY(-4deg);
-  filter: drop-shadow(0 34px 34px rgba(0, 0, 0, 0.32));
-}
-
-.business-card-button.is-flipped .business-card-inner {
-  transform: rotateY(180deg);
-}
-
-.business-card-button.is-flipped:hover .business-card-inner {
-  transform: translateY(-5px) rotateY(184deg);
+.business-card-button.is-dragging .business-card-inner {
+  transition: none;
 }
 
 .business-card-face {
@@ -1444,6 +1442,7 @@ main,
   border: 1px solid rgba(224, 247, 255, 0.19);
   border-radius: clamp(10px, 1.5vw, 20px);
   background: #f5f4f1;
+  box-shadow: 0 26px 34px rgba(0, 0, 0, 0.26);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
@@ -1452,6 +1451,8 @@ main,
   width: 100%;
   height: 100%;
   object-fit: contain;
+  pointer-events: none;
+  user-select: none;
 }
 
 .business-card-back {
@@ -1504,6 +1505,67 @@ main,
 .business-card-button:focus-visible .business-card-inner {
   outline: 2px solid var(--color-primary);
   outline-offset: 6px;
+}
+
+.inspection-toolbar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 22px;
+  padding: 14px 16px;
+  border: 1px solid rgba(125, 211, 252, 0.14);
+  border-radius: 14px;
+  background: rgba(2, 16, 27, 0.48);
+}
+
+.inspection-status {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--color-text-soft);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.63rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.inspection-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.75);
+}
+
+.inspection-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.inspection-actions button {
+  padding: 8px 12px;
+  border: 1px solid rgba(125, 211, 252, 0.19);
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.06);
+  color: var(--color-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+  cursor: pointer;
+  transition: border-color 220ms ease, background 220ms ease, color 220ms ease;
+}
+
+.inspection-actions button:hover {
+  border-color: rgba(125, 211, 252, 0.42);
+  background: rgba(56, 189, 248, 0.13);
+  color: var(--color-primary);
+}
+
+.inspection-actions button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .brand-showcase-footer {
@@ -2336,6 +2398,16 @@ main,
   .interactive-badge { font-size: 0.53rem; }
   .business-card-button { padding-bottom: 52px; }
   .business-card-side { top: 8px; right: 8px; padding: 6px 8px; }
+  .inspection-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .inspection-actions {
+    width: 100%;
+  }
+  .inspection-actions button {
+    flex: 1;
+  }
   .brand-showcase-footer { align-items: flex-start; flex-direction: column; }
   .moodboard-tabs {
     width: 100%;
