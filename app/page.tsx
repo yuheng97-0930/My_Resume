@@ -1,5 +1,3 @@
-"use client";
-
 import {
   FormEvent,
   MouseEvent as ReactMouseEvent,
@@ -7,6 +5,9 @@ import {
   useRef,
   useState,
 } from "react";
+
+const publicAsset = (path: string) =>
+  `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
 
 type Project = {
   title: string;
@@ -84,15 +85,15 @@ const projects: Project[] = [
     ],
     visual: "uni",
     tone: "cyan",
-    cover: "/assets/projects/unismart/unismart-cover.png",
+    cover: publicAsset("assets/projects/unismart/unismart-cover.png"),
     gallery: [
-      "/assets/projects/unismart/unismart-ai-assistant.png",
-      "/assets/projects/unismart/unismart-attendance-scanner.png",
-      "/assets/projects/unismart/unismart-attendance-analytics.png",
-      "/assets/projects/unismart/unismart-timetable.png",
-      "/assets/projects/unismart/unismart-subject-registration.png",
-      "/assets/projects/unismart/unismart-lecturer-attendance.png",
-      "/assets/projects/unismart/unismart-staff-management.png",
+      publicAsset("assets/projects/unismart/unismart-ai-assistant.png"),
+      publicAsset("assets/projects/unismart/unismart-attendance-scanner.png"),
+      publicAsset("assets/projects/unismart/unismart-attendance-analytics.png"),
+      publicAsset("assets/projects/unismart/unismart-timetable.png"),
+      publicAsset("assets/projects/unismart/unismart-subject-registration.png"),
+      publicAsset("assets/projects/unismart/unismart-lecturer-attendance.png"),
+      publicAsset("assets/projects/unismart/unismart-staff-management.png"),
     ],
   },
   {
@@ -110,10 +111,10 @@ const projects: Project[] = [
     ],
     visual: "campus",
     tone: "blue",
-    cover: "/assets/projects/campusgo/campusgo-cover.png",
+    cover: publicAsset("assets/projects/campusgo/campusgo-cover.png"),
     gallery: [
-      "/assets/projects/campusgo/campusgo-schedule.png",
-      "/assets/projects/campusgo/campusgo-map.png",
+      publicAsset("assets/projects/campusgo/campusgo-schedule.png"),
+      publicAsset("assets/projects/campusgo/campusgo-map.png"),
     ],
   },
   {
@@ -132,10 +133,10 @@ const projects: Project[] = [
     ],
     visual: "rover",
     tone: "violet",
-    cover: "/assets/projects/iot-rover/iot-rover-cover.png",
+    cover: publicAsset("assets/projects/iot-rover/rover-cover.png"),
     gallery: [
-      "/assets/projects/iot-rover/iot-rover-controls.png",
-      "/assets/projects/iot-rover/iot-rover-hardware.jpg",
+      publicAsset("assets/projects/iot-rover/rover-controls.png"),
+      publicAsset("assets/projects/iot-rover/iot-rover-hardware.png"),
     ],
   },
   {
@@ -153,8 +154,8 @@ const projects: Project[] = [
     ],
     visual: "hangman",
     tone: "amber",
-    cover: "/assets/projects/hangman/hangman-cover.png",
-    gallery: ["/assets/projects/hangman/hangman-gameplay.png"],
+    cover: publicAsset("assets/projects/hangman/hangman-cover.png"),
+    gallery: [publicAsset("assets/projects/hangman/hangman-gameplay.png")],
   },
 ];
 
@@ -192,7 +193,7 @@ const certificates: Certificate[] = [
     mark: "AWS",
     description:
       "A 20-hour AWS Academy Cloud Foundations training badge issued in 2025.",
-    pdf: "/assets/certificates/aws-cloud-foundations.pdf",
+    pdf: publicAsset("assets/certificates/aws-cloud-foundations.pdf"),
   },
   {
     issuer: "Alibaba Cloud",
@@ -200,7 +201,7 @@ const certificates: Certificate[] = [
     mark: "ALI",
     description:
       "Alibaba Cloud Product Capability Certification for Alibaba Cloud Workspace.",
-    pdf: "/assets/certificates/alibaba-cloud-workspace.pdf",
+    pdf: publicAsset("assets/certificates/alibaba-cloud-workspace.pdf"),
   },
   {
     issuer: "Cisco Networking Academy",
@@ -496,7 +497,7 @@ export default function Home() {
       <header className="site-header">
         <nav className="nav-shell" aria-label="Primary navigation">
           <a className="brand" href="#hero" onClick={() => setMenuOpen(false)} aria-label="Lim Yu Heng home">
-            <img src="/yh-logo.png" alt="" />
+            <img src={publicAsset("yh-logo.png")} alt="" />
             <span>Lim Yu Heng</span>
           </a>
           <button
@@ -524,10 +525,12 @@ export default function Home() {
             </ul>
             <a
               className="button button-small button-outline"
-              href="mailto:limyuheng.sept24@raffles.university?subject=Resume%20request"
+              href={publicAsset("Resume.pdf")}
+              target="_blank"
+              rel="noreferrer"
               data-magnetic
             >
-              Request resume
+              View resume
             </a>
           </div>
         </nav>
@@ -563,7 +566,7 @@ export default function Home() {
             <div className="orbital orbital-small" aria-hidden="true" />
             <div className="logo-stage">
               <div className="logo-halo" />
-              <img src="/yh-logo.png" alt="YH personal monogram" />
+              <img src={publicAsset("yh-logo.png")} alt="YH personal monogram" />
               <span className="logo-coordinate coordinate-one">01° 28′ N</span>
               <span className="logo-coordinate coordinate-two">103° 45′ E</span>
             </div>
@@ -584,10 +587,10 @@ export default function Home() {
             <div className="about-portrait" data-reveal>
               <div className="portrait-placeholder" aria-hidden="true">
                 <span>YH</span>
-                <small>profile-photo.jpg</small>
+                <small>profile-photo.png</small>
               </div>
               <OptionalImage
-                src="/assets/profile/profile-photo.jpg"
+                src={publicAsset("assets/profile/profile-photo.png")}
                 alt="Portrait of Lim Yu Heng"
                 className="portrait-image"
               />
@@ -738,8 +741,14 @@ export default function Home() {
               <h2 id="resume-title">Let&apos;s build something useful.</h2>
               <p>I&apos;m interested in software engineering, application development and opportunities that reward thoughtful problem solving.</p>
             </div>
-            <a className="button button-primary" href="mailto:limyuheng.sept24@raffles.university?subject=Resume%20request" data-magnetic>
-              Request my resume <span aria-hidden="true">↗</span>
+            <a
+              className="button button-primary"
+              href={publicAsset("Resume.pdf")}
+              target="_blank"
+              rel="noreferrer"
+              data-magnetic
+            >
+              View my resume <span aria-hidden="true">↗</span>
             </a>
           </div>
         </section>
@@ -775,7 +784,7 @@ export default function Home() {
       </main>
 
       <footer className="site-footer section-shell">
-        <a className="brand footer-brand" href="#hero"><img src="/yh-logo.png" alt="" /><span>Lim Yu Heng</span></a>
+        <a className="brand footer-brand" href="#hero"><img src={publicAsset("yh-logo.png")} alt="" /><span>Lim Yu Heng</span></a>
         <p>Designed and built with curiosity, code and a little ocean calm.</p>
         <div>
           <span>© {new Date().getFullYear()} Lim Yu Heng</span>

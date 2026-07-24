@@ -1,73 +1,94 @@
 # Lim Yu Heng Portfolio
 
-这是网站的完整 React / Vinext 源码。请用 VS Code 打开这个资料夹的根目录，不要只打开某一个档案。
+这是已经适配 `My_Resume` 仓库的 GitHub Pages 版本。
 
-## 开始运行
+网站地址：
 
-1. 安装 [Node.js 22 LTS](https://nodejs.org/)。
-2. 在 VS Code 开启终端机（Terminal）。
-3. 在本资料夹运行：
+```text
+https://yuheng97-0930.github.io/My_Resume/
+```
+
+## 本机运行
+
+请先安装 Node.js 22 LTS，然后在项目根目录运行：
 
 ```bash
 npm install
 npm run dev
 ```
 
-4. 终端机会显示本机网址，通常是 `http://localhost:3000`。在浏览器开启它即可预览。
+终端会显示本机预览网址。
 
-## 最常需要修改的位置
+## 主要修改位置
 
-| 想修改什么 | 档案 / 资料夹 |
+| 内容 | 文件 |
 | --- | --- |
-| 个人介绍、项目文字、连结、按钮与各区块内容 | `app/page.tsx` |
-| 主题颜色、字体、版面、动画与互动效果 | `app/globals.css` |
-| 个人头像、项目截图、证书与履历 PDF | `public/assets/` 与 `public/resume.pdf` |
-| 每张图片应使用的正确档名 | `ASSET_GUIDE.md` |
+| 网站文字、项目资料、链接和互动逻辑 | `app/page.tsx` |
+| 颜色、布局、响应式样式和动画 | `app/globals.css` |
+| 图片、PDF 和 Logo | `public/` |
+| GitHub Pages 仓库路径 | `vite.config.ts` |
+| 自动部署流程 | `.github/workflows/deploy.yml` |
 
-## 放入你的资源
+代码注释使用 English。
 
-请严格按照 `ASSET_GUIDE.md` 的路径与档名放入资源。网站已经预留好所有位置；放入相同档名后，截图与头像会自动显示。
+## 部署到现有 My_Resume 仓库
 
-### 个人头像
+这个 ZIP 是干净的 GitHub Pages 版本，不包含旧项目的 `.git` 历史。
 
-放入：
+1. 先备份电脑上的旧 `My_Resume` 资料夹。
+2. 保留旧资料夹里面的 `.git` 资料夹。
+3. 删除旧资料夹的其他项目文件。
+4. 将本 ZIP 内的全部文件复制进旧资料夹根目录。
+5. 在旧资料夹打开终端并运行：
+
+```bash
+git add -A
+git commit -m "Convert portfolio for GitHub Pages"
+git push
+```
+
+6. 在 GitHub 仓库进入：
 
 ```text
-public/assets/profile/profile-photo.jpg
+Settings → Pages → Build and deployment → Source → GitHub Actions
 ```
 
-建议使用直式 4:5 照片，至少 1200 × 1500 px。
+7. 进入 `Actions` 页面，等待 `Deploy portfolio to GitHub Pages` 显示绿色。
 
-### 项目截图
+## 资源路径
 
-项目图片的完整清单在 `ASSET_GUIDE.md`。例如 UniSmart 首页截图是：
+所有资源路径已经适配 `/My_Resume/`。资源的准确文件名列在
+`ASSET_GUIDE.md`。
+
+如果未来把仓库改名为 `yuheng97-0930.github.io`，需要把
+`vite.config.ts` 中的：
+
+```ts
+base: "/My_Resume/",
+```
+
+改为：
+
+```ts
+base: "/",
+```
+
+## Resume
+
+网站中的两个 Resume 按钮已经连接到：
 
 ```text
-public/assets/projects/unismart/unismart-cover.png
+public/Resume.pdf
 ```
 
-### Resume PDF
+## 更新网站
 
-放入：
+每次修改完成后运行：
 
-```text
-public/resume.pdf
+```bash
+git add -A
+git commit -m "Update portfolio"
+git push
 ```
 
-之后在 `app/page.tsx` 搜寻 `Request resume`，将两个对应按钮的 `href` 改为：
-
-```tsx
-href="/resume.pdf"
-```
-
-如果你希望点击后直接下载，也可加上 `download` 属性。
-
-## 主题颜色
-
-在 `app/globals.css` 的最上方 `:root` 区块修改颜色变量即可。例如主要蓝色通常是 `--accent` 或相近名称。不要在不同组件中随意写死颜色，这样日后换主题会更轻松。
-
-## 重要说明
-
-这个版本是 React / Vinext 网站，不是最早的纯 `index.html` + CSS 练习版本。日常编辑时，你主要只需要动 `app/page.tsx`、`app/globals.css`，以及 `public/assets/` 内的资源。
-
-代码内的注释维持 English。
+GitHub Actions 会自动重新构建并发布网站。

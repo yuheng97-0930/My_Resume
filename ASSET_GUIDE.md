@@ -1,14 +1,13 @@
 # Portfolio asset guide
 
-Place each file inside the matching path under `public/`. Keep the filenames
-exactly as listed so the website can detect and display the assets without code
-changes.
+Keep these paths and filenames unchanged. GitHub Pages paths are
+case-sensitive.
 
 ## Profile
 
-- `public/assets/profile/profile-photo.jpg`
+- `public/assets/profile/profile-photo.png`
   - Recommended ratio: 4:5 portrait
-  - Recommended size: at least 1200 x 1500 pixels
+  - Recommended size: at least 1200 × 1500 pixels
 
 ## UniSmart
 
@@ -29,19 +28,20 @@ changes.
 
 ## IoT Rover
 
-- `public/assets/projects/iot-rover/iot-rover-cover.png`
-- `public/assets/projects/iot-rover/iot-rover-controls.png`
-- `public/assets/projects/iot-rover/iot-rover-hardware.jpg`
+- `public/assets/projects/iot-rover/rover-cover.png`
+- `public/assets/projects/iot-rover/rover-controls.png`
+- `public/assets/projects/iot-rover/iot-rover-hardware.png`
 
 ## Hangman
 
 - `public/assets/projects/hangman/hangman-cover.png`
 - `public/assets/projects/hangman/hangman-gameplay.png`
 
+## Certificates
+
+- `public/assets/certificates/aws-cloud-foundations.pdf`
+- `public/assets/certificates/alibaba-cloud-workspace.pdf`
+
 ## Resume
 
-- `public/resume.pdf`
-
-The current resume buttons use email requests until the real PDF is added.
-After adding it, change both resume links in `app/page.tsx` to `/resume.pdf` and
-add the `download` attribute if the file should download immediately.
+- `public/Resume.pdf`
