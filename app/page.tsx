@@ -37,6 +37,7 @@ const navigation = [
   ["Projects", "#projects"],
   ["Journey", "#journey"],
   ["Certificates", "#certificates"],
+  ["Brand", "#brand"],
   ["Contact", "#contact"],
 ];
 
@@ -227,6 +228,8 @@ export default function Home() {
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [selectedCertificate, setSelectedCertificate] =
     useState<Certificate | null>(null);
+  const [businessCardFlipped, setBusinessCardFlipped] = useState(false);
+  const [moodboardPage, setMoodboardPage] = useState(0);
   const [formStatus, setFormStatus] = useState("");
 
   useEffect(() => {
@@ -763,6 +766,135 @@ export default function Home() {
           </div>
         </section>
 
+        <section id="brand" className="content-section section-shell brand-section">
+          <div className="section-heading split-heading" data-reveal>
+            <div>
+              <p className="eyebrow">06 · Brand identity</p>
+              <h2>A visual system shaped around who I am.</h2>
+            </div>
+            <p>
+              Explore the business card and moodboard that connect my personal
+              identity, interests and direction.
+            </p>
+          </div>
+
+          <div className="brand-grid">
+            <article className="brand-showcase business-card-showcase" data-reveal>
+              <div className="brand-showcase-heading">
+                <div>
+                  <span className="brand-item-number">01</span>
+                  <h3>Business Card</h3>
+                </div>
+                <span className="interactive-badge">
+                  <i aria-hidden="true">↻</i> Interactive · click to flip
+                </span>
+              </div>
+
+              <button
+                className={`business-card-button ${businessCardFlipped ? "is-flipped" : ""}`}
+                type="button"
+                aria-pressed={businessCardFlipped}
+                aria-label={`Show ${businessCardFlipped ? "front" : "back"} of business card`}
+                onClick={() => setBusinessCardFlipped((flipped) => !flipped)}
+              >
+                <span className="business-card-inner">
+                  <span className="business-card-face business-card-front">
+                    <img
+                      src={publicAsset("assets/brand/business-card-front.png")}
+                      alt="Front of Lim Yu Heng's business card"
+                    />
+                    <span className="business-card-side">Front</span>
+                  </span>
+                  <span className="business-card-face business-card-back">
+                    <img
+                      src={publicAsset("assets/brand/business-card-back.png")}
+                      alt="Back of Lim Yu Heng's business card"
+                    />
+                    <span className="business-card-side">Back</span>
+                  </span>
+                </span>
+                <span className="flip-cue" aria-hidden="true">
+                  <i>↻</i>
+                  <span>Flip card</span>
+                </span>
+              </button>
+
+              <div className="brand-showcase-footer">
+                <p aria-live="polite">
+                  Showing {businessCardFlipped ? "back" : "front"} · Click the card
+                  or press Enter to flip.
+                </p>
+                <a
+                  href={publicAsset("assets/brand/business-card.pdf")}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Open Business Card PDF ↗
+                </a>
+              </div>
+            </article>
+
+            <article className="brand-showcase moodboard-showcase" data-reveal>
+              <div className="brand-showcase-heading">
+                <div>
+                  <span className="brand-item-number">02</span>
+                  <h3>Moodboard</h3>
+                </div>
+                <div className="moodboard-tabs" role="tablist" aria-label="Moodboard pages">
+                  <button
+                    className={moodboardPage === 0 ? "is-active" : ""}
+                    type="button"
+                    role="tab"
+                    aria-selected={moodboardPage === 0}
+                    onClick={() => setMoodboardPage(0)}
+                  >
+                    01 · Moodboard
+                  </button>
+                  <button
+                    className={moodboardPage === 1 ? "is-active" : ""}
+                    type="button"
+                    role="tab"
+                    aria-selected={moodboardPage === 1}
+                    onClick={() => setMoodboardPage(1)}
+                  >
+                    02 · Mind map
+                  </button>
+                </div>
+              </div>
+
+              <div className="moodboard-stage" role="tabpanel">
+                <img
+                  key={moodboardPage}
+                  src={publicAsset(
+                    moodboardPage === 0
+                      ? "assets/brand/moodboard-personality.png"
+                      : "assets/brand/moodboard-mind-map.png",
+                  )}
+                  alt={
+                    moodboardPage === 0
+                      ? "Lim Yu Heng's personal moodboard"
+                      : "Lim Yu Heng's personal mind map"
+                  }
+                />
+                <span className="moodboard-page">
+                  {String(moodboardPage + 1).padStart(2, "0")} / 02
+                </span>
+              </div>
+
+              <div className="brand-showcase-footer">
+                <p>Switch between the original moodboard and its structured mind map.</p>
+                <a
+                  href={publicAsset("assets/brand/moodboard.pdf")}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Open Moodboard PDF ↗
+                </a>
+              </div>
+            </article>
+          </div>
+        </section>
+
         <section className="resume-section section-shell" aria-labelledby="resume-title">
           <div className="resume-card" data-reveal>
             <div className="gear-wrap" aria-hidden="true"><div className="gear" /><span>Hold</span></div>
@@ -786,7 +918,7 @@ export default function Home() {
         <section id="contact" className="content-section section-shell">
           <div className="contact-grid">
             <div className="contact-copy" data-reveal>
-              <p className="eyebrow">06 · Contact</p>
+              <p className="eyebrow">07 · Contact</p>
               <h2>Have an idea or opportunity?</h2>
               <p>Tell me what you&apos;re working on. I&apos;m always happy to discuss software, mobile applications and new things worth learning.</p>
               <a href="mailto:limyuheng.sept24@raffles.university">limyuheng.sept24@raffles.university</a>

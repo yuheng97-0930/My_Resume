@@ -31,6 +31,9 @@ npm run dev
 
 代码注释使用 English。
 
+Business Card 与 Moodboard 已放在 `public/assets/brand/`。Business Card
+可以点击或使用键盘 Enter 翻面，Moodboard 可以在两页之间切换。
+
 ## 部署到现有 My_Resume 仓库
 
 这个 ZIP 是干净的 GitHub Pages 版本，不包含旧项目的 `.git` 历史。

@@ -42,6 +42,18 @@ case-sensitive.
 - `public/assets/certificates/aws-cloud-foundations.pdf`
 - `public/assets/certificates/alibaba-cloud-workspace.pdf`
 
+## Brand identity
+
+- `public/assets/brand/business-card-front.png`
+- `public/assets/brand/business-card-back.png`
+- `public/assets/brand/business-card.pdf`
+- `public/assets/brand/moodboard-personality.png`
+- `public/assets/brand/moodboard-mind-map.png`
+- `public/assets/brand/moodboard.pdf`
+
+The business card preview uses the two PNG files for its interactive
+front-and-back flip. The PDF links open the original two-page documents.
+
 ## Resume
 
 - `public/Resume.pdf`
