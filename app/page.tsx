@@ -224,6 +224,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [galleryIndex, setGalleryIndex] = useState(0);
   const [selectedCertificate, setSelectedCertificate] =
     useState<Certificate | null>(null);
   const [formStatus, setFormStatus] = useState("");
@@ -246,6 +247,14 @@ export default function Home() {
       if (event.key === "Escape") {
         setSelectedProject(null);
         setSelectedCertificate(null);
+      }
+      if (selectedProject && event.key === "ArrowRight") {
+        const imageCount = selectedProject.gallery.length + 1;
+        setGalleryIndex((index) => (index + 1) % imageCount);
+      }
+      if (selectedProject && event.key === "ArrowLeft") {
+        const imageCount = selectedProject.gallery.length + 1;
+        setGalleryIndex((index) => (index - 1 + imageCount) % imageCount);
       }
     };
     window.addEventListener("keydown", closeOnEscape);
@@ -469,6 +478,22 @@ export default function Home() {
     window.location.href = `mailto:limyuheng.sept24@raffles.university?subject=${subject}&body=${body}`;
   };
 
+  const openProject = (project: Project) => {
+    setGalleryIndex(0);
+    setSelectedProject(project);
+  };
+
+  const projectImages = selectedProject
+    ? [selectedProject.cover, ...selectedProject.gallery]
+    : [];
+
+  const changeGalleryImage = (direction: number) => {
+    if (!projectImages.length) return;
+    setGalleryIndex(
+      (index) => (index + direction + projectImages.length) % projectImages.length,
+    );
+  };
+
   return (
     <>
       <a className="skip-link" href="#main-content">Skip to content</a>
@@ -666,13 +691,18 @@ export default function Home() {
                 onMouseMove={handleTilt}
                 onMouseLeave={resetTilt}
               >
-                <button className="project-button" type="button" onClick={() => setSelectedProject(project)} aria-label={`View ${project.title} details`}>
-                  <div className={`project-visual visual-${project.visual}`}>
+                <button className="project-button" type="button" onClick={() => openProject(project)} aria-label={`View ${project.title} details`}>
+                  <div className={`project-visual visual-${project.visual} ${project.visual === "hangman" ? "project-visual-wide" : "project-visual-mobile"}`}>
                     <ProjectVisual type={project.visual} />
                     <OptionalImage
                       src={project.cover}
                       alt={`${project.title} project cover`}
-                      className="project-cover"
+                      className="project-cover project-cover-backdrop"
+                    />
+                    <OptionalImage
+                      src={project.cover}
+                      alt=""
+                      className="project-cover project-cover-foreground"
                     />
                   </div>
                   <div className="project-copy">
@@ -802,15 +832,68 @@ export default function Home() {
             <p className="eyebrow">{selectedProject.eyebrow}</p>
             <h2 id="project-dialog-title">{selectedProject.title}</h2>
             <p>{selectedProject.longDescription}</p>
-            <div className="project-gallery" aria-label={`${selectedProject.title} screenshots`}>
-              {[selectedProject.cover, ...selectedProject.gallery].map((image, index) => (
+            <div className="project-gallery" aria-label={`${selectedProject.title} screenshot gallery`}>
+              <div className="gallery-stage">
+                {projectImages.length > 1 && (
+                  <button
+                    className="gallery-control gallery-previous"
+                    type="button"
+                    aria-label="Show previous screenshot"
+                    onClick={() => changeGalleryImage(-1)}
+                  >
+                    ←
+                  </button>
+                )}
                 <OptionalImage
-                  key={image}
-                  src={image}
-                  alt={`${selectedProject.title} screenshot ${index + 1}`}
-                  className="gallery-image"
+                  key={projectImages[galleryIndex]}
+                  src={projectImages[galleryIndex]}
+                  alt={`${selectedProject.title} screenshot ${galleryIndex + 1}`}
+                  className={`gallery-image ${isWideImage(projectImages[galleryIndex]) ? "gallery-image-wide" : "gallery-image-mobile"}`}
                 />
-              ))}
+                {projectImages.length > 1 && (
+                  <button
+                    className="gallery-control gallery-next"
+                    type="button"
+                    aria-label="Show next screenshot"
+                    onClick={() => changeGalleryImage(1)}
+                  >
+                    →
+                  </button>
+                )}
+                <span className="gallery-counter">
+                  {String(galleryIndex + 1).padStart(2, "0")} / {String(projectImages.length).padStart(2, "0")}
+                </span>
+              </div>
+              <div className="gallery-toolbar">
+                <div className="gallery-thumbnails" role="tablist" aria-label="Choose a screenshot">
+                  {projectImages.map((image, index) => (
+                    <button
+                      className={`gallery-thumbnail ${galleryIndex === index ? "is-active" : ""}`}
+                      type="button"
+                      role="tab"
+                      aria-selected={galleryIndex === index}
+                      aria-label={`Show screenshot ${index + 1}`}
+                      key={image}
+                      onClick={() => setGalleryIndex(index)}
+                    >
+                      <OptionalImage
+                        src={image}
+                        alt=""
+                        className="gallery-thumbnail-image"
+                      />
+                    </button>
+                  ))}
+                </div>
+                <a
+                  className="gallery-open"
+                  href={projectImages[galleryIndex]}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Open full image ↗
+                </a>
+              </div>
+              <p className="gallery-hint">Use the arrows, thumbnails, or keyboard arrow keys.</p>
             </div>
             <h3>Key features</h3>
             <ul className="feature-list">{selectedProject.features.map((feature) => <li key={feature}><span aria-hidden="true">01</span>{feature}</li>)}</ul>
@@ -908,4 +991,8 @@ function OptionalImage({
       onError={() => setMissing(true)}
     />
   );
+}
+
+function isWideImage(src: string) {
+  return src.includes("hangman") || src.includes("iot-rover-hardware");
 }
