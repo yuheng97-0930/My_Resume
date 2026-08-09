@@ -1736,7 +1736,7 @@ main,
   font-size: 0.84rem;
 }
 
-.contact-copy .github-link {
+.contact-copy .social-link {
   display: block;
   width: fit-content;
   margin-top: 18px;
@@ -1744,7 +1744,7 @@ main,
   color: var(--color-text-soft);
 }
 
-.contact-copy .github-link:hover {
+.contact-copy .social-link:hover {
   border-color: var(--color-primary);
   color: var(--color-text);
 }
@@ -1816,6 +1816,52 @@ main,
   margin: 0;
   color: var(--color-text-soft);
   font-size: 0.68rem;
+}
+
+.contact-form [role="alert"] {
+  margin-top: -14px;
+  color: #fda4af;
+  font-size: 0.68rem;
+}
+
+.contact-form button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.contact-success {
+  display: grid;
+  min-height: 430px;
+  align-content: center;
+  justify-items: start;
+  gap: 18px;
+  padding: clamp(27px, 4vw, 48px);
+  border-radius: var(--radius-lg);
+}
+
+.contact-success-icon {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  border: 1px solid rgba(125, 211, 252, 0.3);
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--color-primary);
+  font-size: 1.4rem;
+}
+
+.contact-success h3 {
+  margin: 0;
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+}
+
+.contact-success p {
+  max-width: 500px;
+  margin: 0;
+  color: var(--color-text-soft);
+  line-height: 1.7;
 }
 
 .site-footer {

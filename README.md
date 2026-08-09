@@ -84,6 +84,16 @@ base: "/",
 public/Resume.pdf
 ```
 
+## Contact form
+
+Contact 表单使用 `@formspree/react` 与 Formspree Form ID `mrpzevqp`。
+Formspree Dashboard 中的 Target Email 必须保持已验证状态，提交内容才会发送到目标邮箱。
+LinkedIn 已连接到：
+
+```text
+https://www.linkedin.com/in/lim-yu-heng-969546427
+```
+
 ## 更新网站
 
 每次修改完成后运行：

@@ -1,5 +1,4 @@
 import {
-  FormEvent,
   KeyboardEvent as ReactKeyboardEvent,
   MouseEvent as ReactMouseEvent,
   PointerEvent as ReactPointerEvent,
@@ -7,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useForm, ValidationError } from "@formspree/react";
 
 const publicAsset = (path: string) =>
   `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
@@ -242,7 +242,7 @@ export default function Home() {
   const [cardRotation, setCardRotation] = useState({ x: 0, y: 0 });
   const [cardDragging, setCardDragging] = useState(false);
   const [moodboardPage, setMoodboardPage] = useState(0);
-  const [formStatus, setFormStatus] = useState("");
+  const [contactState, submitContact, resetContact] = useForm("mrpzevqp");
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -542,22 +542,6 @@ export default function Home() {
       event.preventDefault();
       setCardRotation({ x: 0, y: 0 });
     }
-  };
-
-  const handleContact = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const name = String(form.get("name") || "").trim();
-    const email = String(form.get("email") || "").trim();
-    const message = String(form.get("message") || "").trim();
-    if (!name || !email || !message) {
-      setFormStatus("Please complete all fields.");
-      return;
-    }
-    setFormStatus("Opening your email application...");
-    const subject = encodeURIComponent(`Portfolio enquiry from ${name}`);
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
-    window.location.href = `mailto:limyuheng.sept24@raffles.university?subject=${subject}&body=${body}`;
   };
 
   const openProject = (project: Project) => {
@@ -1031,26 +1015,101 @@ export default function Home() {
               <p className="eyebrow">07 · Contact</p>
               <h2>Have an idea or opportunity?</h2>
               <p>Tell me what you&apos;re working on. I&apos;m always happy to discuss software, mobile applications and new things worth learning.</p>
-              <a href="mailto:limyuheng.sept24@raffles.university">limyuheng.sept24@raffles.university</a>
+              <a href="mailto:yuhenglim99@gmail.com">yuhenglim99@gmail.com</a>
               <a
-                className="github-link"
+                className="social-link"
                 href="https://github.com/yuheng97-0930"
                 target="_blank"
                 rel="noreferrer"
               >
                 github.com/yuheng97-0930 ↗
               </a>
+              <a
+                className="social-link"
+                href="https://www.linkedin.com/in/lim-yu-heng-969546427"
+                target="_blank"
+                rel="noreferrer"
+              >
+                linkedin.com/in/lim-yu-heng-969546427 ↗
+              </a>
+
               <span>Johor, Malaysia · GMT+8</span>
             </div>
-            <form className="contact-form glass-panel" onSubmit={handleContact} data-reveal>
-              <label><span>Your name</span><input type="text" name="name" autoComplete="name" placeholder="How should I address you?" /></label>
-              <label><span>Email address</span><input type="email" name="email" autoComplete="email" placeholder="you@example.com" /></label>
-              <label><span>Message</span><textarea name="message" rows={5} placeholder="Tell me a little about your idea..." /></label>
-              <div className="form-footer">
-                <p aria-live="polite">{formStatus}</p>
-                <button className="button button-primary" type="submit" data-magnetic>Send message <span aria-hidden="true">↗</span></button>
+            {contactState.succeeded ? (
+              <div className="contact-success glass-panel">
+                <span className="contact-success-icon" aria-hidden="true">✓</span>
+                <h3>Message sent successfully.</h3>
+                <p>
+                  Thank you for contacting me. I will reply through the email
+                  address you provided.
+                </p>
+                <button
+                  className="button button-outline"
+                  type="button"
+                  onClick={resetContact}
+                >
+                  Send another message
+                </button>
               </div>
-            </form>
+            ) : (
+              <form className="contact-form glass-panel" onSubmit={submitContact} data-reveal>
+                <label>
+                  <span>Your name</span>
+                  <input
+                    type="text"
+                    name="name"
+                    autoComplete="name"
+                    placeholder="How should I address you?"
+                    maxLength={100}
+                    required
+                  />
+                </label>
+                <ValidationError prefix="Name" field="name" errors={contactState.errors} />
+
+                <label>
+                  <span>Email address</span>
+                  <input
+                    type="email"
+                    name="email"
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    maxLength={150}
+                    required
+                  />
+                </label>
+                <ValidationError prefix="Email" field="email" errors={contactState.errors} />
+
+                <label>
+                  <span>Message</span>
+                  <textarea
+                    name="message"
+                    rows={5}
+                    placeholder="Tell me a little about your idea..."
+                    minLength={10}
+                    maxLength={2000}
+                    required
+                  />
+                </label>
+                <ValidationError prefix="Message" field="message" errors={contactState.errors} />
+
+                <div className="form-footer">
+                  <p aria-live="polite">
+                    {contactState.submitting
+                      ? "Sending your message..."
+                      : "Your details will only be used to reply to this message."}
+                  </p>
+                  <button
+                    className="button button-primary"
+                    type="submit"
+                    disabled={contactState.submitting}
+                    data-magnetic
+                  >
+                    {contactState.submitting ? "Sending..." : "Send message"}
+                    <span aria-hidden="true">↗</span>
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </section>
       </main>
