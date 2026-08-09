@@ -66,7 +66,7 @@ const skills = [
     number: "04",
     title: "Tools & Exploration",
     detail: "Working with modern development workflows while exploring game systems.",
-    tools: ["Git", "GitHub", "Android Studio", "Unreal Engine"],
+    tools: ["Git", "GitHub", "Android Studio", "VS Code", "TypeScript — Currently Learning"],
   },
 ];
 
@@ -681,7 +681,7 @@ export default function Home() {
               <span className="logo-coordinate coordinate-one">01° 28′ N</span>
               <span className="logo-coordinate coordinate-two">103° 45′ E</span>
             </div>
-            <div className="status-chip status-top"><span />Open to opportunities</div>
+            <div className="status-chip status-top"><span />Seeking an IT Internship</div>
             <div className="status-chip status-bottom">Flutter · Software · Games</div>
           </div>
           <a className="scroll-cue" href="#about" aria-label="Scroll to about section">
@@ -698,10 +698,10 @@ export default function Home() {
             <div className="about-portrait" data-reveal>
               <div className="portrait-placeholder" aria-hidden="true">
                 <span>YH</span>
-                <small>profile-photo.png</small>
+                <small>profile-photo.jpg</small>
               </div>
               <OptionalImage
-                src={publicAsset("assets/profile/profile-photo.png")}
+                src={publicAsset("assets/profile/profile-photo.jpg")}
                 alt="Portrait of Lim Yu Heng"
                 className="portrait-image"
               />
@@ -727,7 +727,7 @@ export default function Home() {
                 {[
                   ["Education", "Diploma in Information Technology"],
                   ["University", "Raffles University"],
-                  ["CGPA", "3.26"],
+                  ["Current Goal", "IT Internship"],
                   ["Direction", "Software · Apps · Games"],
                 ].map(([label, value], index) => (
                   <article
