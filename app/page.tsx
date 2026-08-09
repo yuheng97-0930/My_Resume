@@ -657,8 +657,7 @@ export default function Home() {
               <span>digital experiences.</span>
             </h1>
             <p className="hero-intro" data-reveal>
-              I&apos;m Lim Yu Heng — a Flutter developer and software engineering
-              enthusiast turning complex campus workflows into clear, useful products.
+              I&apos;m Lim Yu Heng — a Diploma in Information Technology student building mobile and academic software projects with Flutter, Supabase and PostgreSQL. I’m currently seeking an internship in software, mobile or web development.
             </p>
             <div className="hero-actions" data-reveal>
               <a className="button button-primary" href="#projects" data-magnetic>
