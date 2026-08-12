@@ -711,7 +711,7 @@ export default function Home() {
                 {[
                   ["Education", "Diploma in Information Technology"],
                   ["University", "Raffles University"],
-                  ["Current Goal", "IT Internship"],
+                  ["Current Goal", "IT Internship Septemper 2026-November 2026 (3month)"],
                   ["Direction", "Software · Apps · Games"],
                 ].map(([label, value], index) => (
                   <article
